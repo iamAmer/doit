@@ -22,9 +22,7 @@ function App() {
       // ignore parse errors and fall back to defaults
     }
 
-    return [
-      { id: 1, title: 'Learn React', completed: false },
-    ]
+    return [{ id: 1, title: 'Learn React', completed: false }]
   })
 
   const [selectedTab, setSelectedTab] = useState('Active')

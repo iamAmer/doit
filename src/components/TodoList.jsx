@@ -13,7 +13,14 @@ export function TodoList(props) {
   return (
     <>
       {filteredTodoList.map((todo, todoIndex) => {
-        return <TodoCard key={todoIndex} todoIndex={todoIndex} {...props} todo={todo} />
+        return (
+          <TodoCard
+            key={todoIndex}
+            todoIndex={todoIndex}
+            {...props}
+            todo={todo}
+          />
+        )
       })}
     </>
   )
