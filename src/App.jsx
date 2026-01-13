@@ -8,12 +8,24 @@ import './fanta.css'
 import { useState } from 'react'
 
 function App() {
-  const [todos, setTodos] = useState([
-    { id: 1, title: 'Learn React', completed: false },
-    { id: 2, title: 'Build a To-Do App', completed: true },
-    { id: 3, title: 'Master JavaScript', completed: false },
-    { id: 4, title: 'Explore CSS Tricks', completed: true },
-  ])
+  const [todos, setTodos] = useState(() => {
+    // try to load saved todos from localStorage on initial render
+    try {
+      if (typeof localStorage !== 'undefined') {
+        const saved = localStorage.getItem('todo-app')
+        if (saved) {
+          const db = JSON.parse(saved)
+          if (db && Array.isArray(db.todos)) return db.todos
+        }
+      }
+    } catch {
+      // ignore parse errors and fall back to defaults
+    }
+
+    return [
+      { id: 1, title: 'Learn React', completed: false },
+    ]
+  })
 
   const [selectedTab, setSelectedTab] = useState('Active')
 
@@ -23,6 +35,7 @@ function App() {
       { title: newTodo, completed: false, id: crypto.randomUUID() },
     ]
     setTodos(newTodos)
+    handleSaveData(newTodos)
   }
 
   function handleCompleteTodo(index) {
@@ -31,13 +44,21 @@ function App() {
     )
 
     setTodos(newTodos)
+    handleSaveData(newTodos)
   }
-
 
   function handleDeleteTodo(index) {
     let newTodoList = todos.filter((todo, todoIndex) => todoIndex !== index)
     setTodos(newTodoList)
+    handleSaveData(newTodoList)
   }
+
+  function handleSaveData(currentTodos) {
+    // store under `todos` so load logic can read `db.todos`
+    localStorage.setItem('todo-app', JSON.stringify({ todos: currentTodos }))
+  }
+
+  // initial load handled by lazy useState initializer above
 
   return (
     <>
